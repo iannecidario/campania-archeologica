@@ -1,0 +1,78 @@
+{
+  "schema_version": "1.0.0",
+  "created_at": "2026-06-30T14:10:59.168970+00:00",
+  "map_fingerprint": {
+    "hash": "063041994275f11e1274ad45f5e6d8ffc4680458a419c3351b64209eb53a101b",
+    "algorithm": "sha256"
+  },
+  "model": {
+    "human_user_name": "Dario",
+    "llm_name": "GPT-5.5 Thinking"
+  },
+  "agent": {
+    "name": "Web Mapper",
+    "url": "https://webmapgpt.com",
+    "version": "2026-06-30"
+  },
+  "map": {
+    "title": "Campania Archeologica — Neon Atlas",
+    "description": "Mappa interattiva dark dei principali siti archeologici della Campania con filtri e popup informativi.",
+    "stack": [
+      {
+        "name": "Leaflet",
+        "version": "1.9.4"
+      },
+      {
+        "name": "CartoDB Dark Matter",
+        "version": "current"
+      }
+    ],
+    "outputs": {}
+  },
+  "datasets": [
+    {
+      "name": "Siti archeologici principali della Campania",
+      "type": "GeoJSON embedded in HTML",
+      "source_url": "https://whc.unesco.org/",
+      "fields": [
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "prov",
+          "type": "string"
+        },
+        {
+          "name": "period",
+          "type": "string"
+        },
+        {
+          "name": "type",
+          "type": "string"
+        },
+        {
+          "name": "importance",
+          "type": "number"
+        },
+        {
+          "name": "unesco",
+          "type": "string"
+        },
+        {
+          "name": "desc",
+          "type": "string"
+        },
+        {
+          "name": "source",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "prompts": [
+    "Aspetta. Voglio sapere se puoi creare una mappa dei maggiori siti archeologici della Campania?",
+    "Bene. Allora procedi",
+    "Va bene. Procedi allora..."
+  ]
+}
