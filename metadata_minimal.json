@@ -2,8 +2,8 @@
   "schema_version": "1.0.0",
   "created_at": "2026-06-30T14:19:14.577339+00:00",
   "map_fingerprint": {
-    "hash": "8fb47a4f57715545477bd2e479ef2665dcd8f36b450da985998d9cc916a48c7d",
-    "algorithm": "sha256"
+    "algorithm": "sha256",
+    "hash": "b89a23bed4bc5b47ef83262b6837e50e2f8571a979946e3d814fe401a7ec61b4"
   },
   "model": {
     "human_user_name": "Dario",

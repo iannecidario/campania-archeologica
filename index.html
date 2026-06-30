@@ -76,7 +76,12 @@ button{font:inherit;cursor:pointer;color:var(--text)}
   .topbar{left:10px;right:10px;top:10px;padding:12px}.panel{left:10px;right:10px;top:100px;width:auto}.legend{left:10px;right:10px;bottom:14px}.leaflet-popup-content{width:280px!important}
 }
 
-</style>
+
+    .osm-dark-tiles {
+      filter: invert(1) hue-rotate(180deg) brightness(.42) contrast(1.12) saturate(.45);
+    }
+
+  </style>
 </head>
 <body>
   <div id="app">
@@ -883,11 +888,17 @@ const map = L.map('map', {
   maxZoom: 16
 }).setView(initialView.center, initialView.zoom);
 
-L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-  attribution: '&copy; OpenStreetMap contributors &copy; CARTO | Web Mapper GPT',
-  subdomains: 'abcd',
-  maxZoom: 20
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; OpenStreetMap contributors | Web Mapper GPT',
+  maxZoom: 19,
+  className: 'osm-dark-tiles',
+  crossOrigin: true
 }).addTo(map);
+
+// Safari/GitHub Pages safeguard: force Leaflet to recalculate tile positions
+// after browser layout settles, avoiding partial/blank tile grids on first paint.
+setTimeout(() => map.invalidateSize(true), 250);
+window.addEventListener('load', () => setTimeout(() => map.invalidateSize(true), 250));
 
 markerLayer.addTo(map);
 
