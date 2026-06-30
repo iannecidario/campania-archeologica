@@ -1,8 +1,8 @@
 {
   "schema_version": "1.0.0",
-  "created_at": "2026-06-30T14:10:59.168970+00:00",
+  "created_at": "2026-06-30T14:19:14.577339+00:00",
   "map_fingerprint": {
-    "hash": "063041994275f11e1274ad45f5e6d8ffc4680458a419c3351b64209eb53a101b",
+    "hash": "8fb47a4f57715545477bd2e479ef2665dcd8f36b450da985998d9cc916a48c7d",
     "algorithm": "sha256"
   },
   "model": {
@@ -12,59 +12,70 @@
   "agent": {
     "name": "Web Mapper",
     "url": "https://webmapgpt.com",
-    "version": "2026-06-30"
+    "version": "2026-06"
   },
   "map": {
-    "title": "Campania Archeologica — Neon Atlas",
-    "description": "Mappa interattiva dark dei principali siti archeologici della Campania con filtri e popup informativi.",
+    "title": "Campania Archeologica · Neon Atlas",
+    "description": "Mappa interattiva dark-neon dei principali siti archeologici della Campania in un unico index.html pronto per GitHub Pages.",
     "stack": [
       {
         "name": "Leaflet",
         "version": "1.9.4"
       },
       {
-        "name": "CartoDB Dark Matter",
-        "version": "current"
+        "name": "CARTO Dark Matter",
+        "version": "web tiles"
+      },
+      {
+        "name": "GeoJSON",
+        "version": "RFC 7946"
       }
-    ],
-    "outputs": {}
+    ]
   },
   "datasets": [
     {
-      "name": "Siti archeologici principali della Campania",
-      "type": "GeoJSON embedded in HTML",
-      "source_url": "https://whc.unesco.org/",
+      "name": "Principali siti archeologici della Campania",
+      "type": "GeoJSON point FeatureCollection",
+      "source_url": "https://whc.unesco.org/en/list/829/",
       "fields": [
+        {
+          "name": "id",
+          "type": "integer"
+        },
         {
           "name": "name",
           "type": "string"
         },
         {
-          "name": "prov",
+          "name": "comune",
           "type": "string"
         },
         {
-          "name": "period",
+          "name": "provincia",
           "type": "string"
         },
         {
-          "name": "type",
+          "name": "periodo",
           "type": "string"
         },
         {
-          "name": "importance",
-          "type": "number"
-        },
-        {
-          "name": "unesco",
+          "name": "tipologia",
           "type": "string"
         },
         {
-          "name": "desc",
+          "name": "macro_area",
           "type": "string"
         },
         {
-          "name": "source",
+          "name": "descrizione",
+          "type": "string"
+        },
+        {
+          "name": "fonte",
+          "type": "string"
+        },
+        {
+          "name": "rilevanza",
           "type": "string"
         }
       ]
@@ -72,7 +83,23 @@
   ],
   "prompts": [
     "Aspetta. Voglio sapere se puoi creare una mappa dei maggiori siti archeologici della Campania?",
-    "Bene. Allora procedi",
-    "Va bene. Procedi allora..."
+    "Bene. Allora procedi ",
+    "Se volessi pubblicare on line?",
+    "Prima vorrei capire questa indicazione poi nella cartella esegui: python3 -m http.server 8000. Soprattutto cosa vuol dire nella cartella esegui... Io ho Mac Desktop",
+    "Mah... il terminale mi ha questo",
+    "Io ho Mac (non control + C...)",
+    "Questa è la cartella aperta sul dektop",
+    "Ok vedo la mappa sì...",
+    "Bene. ok... Adesso ripeti la procedura per la pubblicazione on line. Io ho GitHub. Basta? oppure occorre un altro servizio per il link on line interattivo?",
+    "Lascio così questi campi?",
+    "File caricati. Adesso guidami per il resto.",
+    "Ecco",
+    "ho usato: campania-archeologica",
+    "In safari, compare solo questa schermata...",
+    "Va bene. Procedi allora...",
+    "Devo eliminare i file di prima presenti su GitHub oppure vengono soprascritti?",
+    "Nella scheda Code vecchia vedo solo un Readme...",
+    "Dopo il download la cartella appare già decompressa (non zappata) e contiene questi file; ma INDEX è di pochi kb...",
+    "Va bene. Ma riuscirai a generale questo file grande? Altrimenti è inutile continuare..."
   ]
 }

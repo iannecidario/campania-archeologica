@@ -1,3 +1,3 @@
-# Campania Archeologica — Neon Atlas
+# Campania Archeologica · Neon Atlas
 
-Mappa interattiva pronta per GitHub Pages. Caricare `index.html` nella root del repository.
+Versione single-file: carica `index.html` nella root del repository GitHub Pages.

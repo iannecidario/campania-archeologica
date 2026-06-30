@@ -1,68 +1,1017 @@
 <!doctype html>
 <html lang="it">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Atlante interattivo dark dei principali siti archeologici della Campania, con filtri, schede e fonti consultabili."/>
-  <meta name="keywords" content="dark map, neon, archaeological sites, point data, interactive atlas, leaflet"/>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Atlante interattivo dark-neon dei maggiori siti archeologici della Campania con filtri, ricerca e popup descrittivi."/>
+  <meta name="keywords" content="dark map, neon atlas, archaeological sites, point map, interactive popups, Campania"/>
   <meta name="orig_prompt" content="Aspetta. Voglio sapere se puoi creare una mappa dei maggiori siti archeologici della Campania?"/>
-  <title>Campania Archeologica — Neon Atlas</title>
+  <title>Campania Archeologica · Neon Atlas</title>
   <link rel="preconnect" href="https://unpkg.com">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <link rel="preconnect" href="https://{s}.basemaps.cartocdn.com">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIINfQeI/099kqvG3pX8JQBqyg17f5BbZB0=" crossorigin=""/>
   <style>
-    :root{--bg:#070b12;--panel:rgba(9,15,25,.88);--cyan:#42f5ff;--gold:#ffd166;--pink:#ff4fd8;--text:#edf7ff;--muted:#9fb1c4}
-    html,body,#map{height:100%;margin:0;background:var(--bg);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;color:var(--text)}
-    .top{position:absolute;top:18px;left:50%;transform:translateX(-50%);z-index:1000;background:linear-gradient(135deg,rgba(6,12,22,.94),rgba(18,28,44,.82));border:1px solid rgba(66,245,255,.32);box-shadow:0 0 28px rgba(66,245,255,.18);border-radius:22px;padding:14px 22px;text-align:center;backdrop-filter:blur(12px);min-width:min(720px,calc(100vw - 30px))}
-    h1{margin:0;font-size:clamp(22px,3vw,38px);letter-spacing:.04em;text-transform:uppercase} .sub{color:var(--muted);font-size:13px;margin-top:4px}
-    .panel{position:absolute;left:18px;top:112px;z-index:1000;width:290px;background:var(--panel);border:1px solid rgba(66,245,255,.22);border-radius:20px;padding:16px;box-shadow:0 16px 44px rgba(0,0,0,.45);backdrop-filter:blur(12px)}
-    .panel label{display:block;font-size:12px;text-transform:uppercase;color:var(--muted);letter-spacing:.12em;margin:12px 0 6px}
-    select,input{width:100%;box-sizing:border-box;background:#0b1320;color:var(--text);border:1px solid rgba(66,245,255,.25);border-radius:12px;padding:10px;outline:none}
-    .stat{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px} .chip{border:1px solid rgba(255,209,102,.25);border-radius:14px;padding:9px;background:rgba(255,209,102,.06)} .chip b{display:block;font-size:20px;color:var(--gold)}
-    .btn{cursor:pointer;background:#0b1320;color:var(--cyan);border:1px solid rgba(66,245,255,.35);border-radius:12px;padding:9px 12px;margin-top:12px;width:100%}
-    .sourcesBtn{position:absolute;right:18px;bottom:22px;z-index:1000;width:auto}
-    .legend{position:absolute;right:18px;top:112px;z-index:1000;background:var(--panel);border:1px solid rgba(66,245,255,.2);border-radius:18px;padding:12px 14px;max-width:245px}
-    .legend details summary{cursor:pointer;color:var(--cyan);font-weight:700} .legitem{display:flex;align-items:center;gap:9px;margin:9px 0;color:var(--muted);font-size:13px} .dot{width:14px;height:14px;border-radius:50%;box-shadow:0 0 12px currentColor}
-    .leaflet-control-container{z-index:700} .leaflet-popup-content-wrapper{background:#07101c;color:var(--text);border:1px solid rgba(66,245,255,.35);border-radius:18px;box-shadow:0 0 30px rgba(66,245,255,.18)} .leaflet-popup-tip{background:#07101c} .leaflet-popup-content{margin:15px;width:270px!important} .popup h3{margin:0 0 7px;color:var(--cyan)} .badge{display:inline-block;border:1px solid rgba(255,209,102,.4);color:var(--gold);border-radius:999px;padding:3px 8px;font-size:11px;margin:3px 3px 8px 0} .popup p{line-height:1.45;color:#cbd8e6}
-    .modal{display:none;position:fixed;z-index:3000;inset:0;background:rgba(0,0,0,.62);align-items:center;justify-content:center;padding:18px} .modalBox{max-width:760px;background:#07101c;border:1px solid rgba(66,245,255,.35);border-radius:24px;padding:22px;box-shadow:0 0 50px rgba(66,245,255,.2)} .modal a{color:var(--cyan)} .close{float:right;font-size:24px;cursor:pointer;color:var(--gold)}
-    @media(max-width:760px){.panel{left:10px;right:10px;top:auto;bottom:78px;width:auto}.legend{display:none}.top{top:10px}}
-  </style>
+
+:root{
+  --bg:#05070d;--panel:rgba(7,13,24,.84);--panel-strong:rgba(8,16,30,.94);
+  --cyan:#49f6ff;--pink:#ff4fd8;--gold:#f7d66b;--green:#42ff9e;--text:#eef7ff;--muted:#9fb2c4;
+  --line:rgba(73,246,255,.28);--shadow:0 0 30px rgba(73,246,255,.18),0 0 80px rgba(255,79,216,.08);
+}
+*{box-sizing:border-box}
+html,body,#app,#map{height:100%;margin:0}
+body{font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;background:var(--bg);color:var(--text);overflow:hidden}
+#map{z-index:1;background:#05070d;filter:saturate(1.05) contrast(1.08)}
+.hud{backdrop-filter:blur(18px);background:var(--panel);border:1px solid var(--line);box-shadow:var(--shadow)}
+.topbar{position:absolute;z-index:500;left:22px;right:22px;top:18px;display:flex;justify-content:space-between;align-items:center;padding:16px 18px;border-radius:22px}
+.eyebrow{margin:0 0 4px;color:var(--cyan);letter-spacing:.16em;text-transform:uppercase;font-size:11px}
+h1{font-size:clamp(24px,4vw,44px);margin:0;line-height:1;font-weight:850;text-shadow:0 0 18px rgba(73,246,255,.4)}
+h2{margin:0 0 12px;font-size:18px}
+.panel{position:absolute;z-index:480;left:22px;top:128px;width:310px;padding:16px;border-radius:22px;transition:.28s ease}
+.panel.collapsed{transform:translateX(-360px);opacity:0;pointer-events:none}
+.panel-head{display:flex;align-items:center;justify-content:space-between}
+label{display:block;margin:14px 0 7px;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.12em}
+input,select{width:100%;border:1px solid rgba(73,246,255,.22);border-radius:14px;padding:12px 12px;background:rgba(2,6,12,.78);color:var(--text);outline:none}
+input:focus,select:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(73,246,255,.12)}
+button{font:inherit;cursor:pointer;color:var(--text)}
+.ghost-btn,.primary-btn,.icon-btn{border:1px solid rgba(73,246,255,.35);background:rgba(6,15,28,.8);border-radius:14px;padding:10px 14px}
+.primary-btn{width:100%;margin-top:16px;background:linear-gradient(135deg,rgba(73,246,255,.22),rgba(255,79,216,.2));font-weight:750}
+.icon-btn{width:38px;height:38px;padding:0;display:grid;place-items:center}
+.restore{display:none;position:absolute;z-index:490;left:22px;top:128px;border-radius:999px;padding:12px 17px;color:var(--cyan)}
+.restore.visible{display:block}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:15px}
+.stats div{border:1px solid rgba(73,246,255,.18);border-radius:18px;padding:12px;text-align:center;background:rgba(73,246,255,.06)}
+.stats span{font-size:26px;font-weight:900;display:block}
+.stats small{color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+.legend{position:absolute;z-index:470;right:22px;bottom:26px;padding:13px 15px;border-radius:18px;min-width:230px}
+.legend-title{font-weight:850;margin-bottom:8px}
+.legend-row{font-size:13px;color:#dcecff;margin:7px 0;display:flex;align-items:center;gap:9px}
+.dot{width:14px;height:14px;border-radius:50%;display:inline-block;box-shadow:0 0 14px currentColor}
+.dot.unesco{background:var(--gold);color:var(--gold)}
+.dot.flegrei{background:var(--pink);color:var(--pink)}
+.dot.vesuviana{background:var(--cyan);color:var(--cyan)}
+.dot.other{background:var(--green);color:var(--green)}
+.loading{position:absolute;z-index:900;inset:0;display:grid;place-items:center;background:radial-gradient(circle at center,rgba(73,246,255,.12),rgba(5,7,13,.96) 55%);font-size:24px;letter-spacing:.08em;color:var(--cyan)}
+.loading.hidden{display:none}
+.leaflet-control-attribution{background:rgba(5,7,13,.75)!important;color:#9fb2c4!important;border-radius:10px 0 0 0}
+.leaflet-control-attribution a{color:var(--cyan)!important}
+.leaflet-popup-content-wrapper{background:rgba(5,10,20,.96);color:var(--text);border:1px solid rgba(73,246,255,.35);border-radius:18px;box-shadow:0 0 34px rgba(73,246,255,.22)}
+.leaflet-popup-tip{background:rgba(5,10,20,.96);border:1px solid rgba(73,246,255,.25)}
+.leaflet-popup-content{margin:0;width:320px!important}
+.popup-card{padding:16px}
+.popup-kicker{color:var(--cyan);text-transform:uppercase;letter-spacing:.16em;font-size:11px;margin-bottom:7px}
+.popup-title{font-size:20px;font-weight:900;margin:0 0 7px}
+.popup-meta{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.badge{border:1px solid rgba(73,246,255,.2);background:rgba(73,246,255,.08);border-radius:999px;padding:5px 8px;font-size:12px;color:#dff9ff}
+.popup-card p{line-height:1.45;color:#d3e3f3}
+.popup-card a{color:var(--gold);font-weight:750;text-decoration:none}
+.pulse-marker{width:22px;height:22px;border-radius:50%;border:2px solid currentColor;background:currentColor;box-shadow:0 0 18px currentColor,0 0 36px currentColor;position:relative}
+.pulse-marker:after{content:"";position:absolute;inset:-9px;border-radius:50%;border:1px solid currentColor;animation:pulse 1.8s ease-out infinite}
+@keyframes pulse{0%{transform:scale(.5);opacity:.85}100%{transform:scale(1.8);opacity:0}}
+.modal-backdrop{position:absolute;z-index:1000;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;padding:20px}
+.modal-backdrop.open{display:flex}
+.modal{max-width:720px;padding:24px;border-radius:24px;line-height:1.6}
+.modal a{color:var(--cyan)}.close{float:right}
+@media(max-width:760px){
+  .topbar{left:10px;right:10px;top:10px;padding:12px}.panel{left:10px;right:10px;top:100px;width:auto}.legend{left:10px;right:10px;bottom:14px}.leaflet-popup-content{width:280px!important}
+}
+
+</style>
 </head>
 <body>
-<div id="map" role="application" aria-label="Mappa dei principali siti archeologici della Campania"></div>
-<header class="top"><h1>Campania Archeologica</h1><div class="sub">Neon atlas dei maggiori siti archeologici — clicca i marker per esplorare</div></header>
-<aside class="panel">
-  <label>Cerca sito</label><input id="search" placeholder="Pompei, Paestum, Cuma…" aria-label="Cerca sito">
-  <label>Provincia</label><select id="prov"><option value="all">Tutte</option></select>
-  <label>Periodo</label><select id="period"><option value="all">Tutti</option></select>
-  <div class="stat"><div class="chip"><b id="count">0</b><span>visibili</span></div><div class="chip"><b>19</b><span>siti totali</span></div></div>
-  <button class="btn" id="reset">Reset vista</button>
-</aside>
-<div class="legend"><details open><summary>Legenda</summary>
-  <div class="legitem"><span class="dot" style="color:#42f5ff;background:#42f5ff"></span> UNESCO / rilevanza massima</div>
-  <div class="legitem"><span class="dot" style="color:#ffd166;background:#ffd166"></span> grande complesso</div>
-  <div class="legitem"><span class="dot" style="color:#ff4fd8;background:#ff4fd8"></span> sito puntuale / urbano</div>
-</details></div>
-<button class="btn sourcesBtn" id="sources">Fonti e crediti</button>
-<div class="modal" id="modal"><div class="modalBox"><span class="close" id="close">×</span><h2>Fonti e crediti</h2>
-<p>Dati compilati come dataset puntuale editoriale dai principali siti archeologici della Campania. Coordinate approssimate ai luoghi pubblici/aree monumentali.</p>
-<ul><li>UNESCO World Heritage Centre: Pompei, Ercolano, Torre Annunziata; Paestum e Velia.</li><li>Ministero della Cultura / parchi archeologici: Campi Flegrei, Anfiteatro Campano, Benevento, siti regionali.</li><li>Basemap: CartoDB Dark Matter via OpenStreetMap contributors.</li><li>Nessuna immagine esterna inclusa in questa versione.</li></ul>
-<p>Made with <a href="https://webmapgpt.com" target="_blank" rel="noopener">Web Mapper GPT</a>.</p></div></div>
-<script>
-const DATA = {"type": "FeatureCollection", "features": [{"type": "Feature", "geometry": {"type": "Point", "coordinates": [14.484, 40.7484]}, "properties": {"name": "Pompei", "prov": "NA", "period": "Romano", "type": "Città sepolta", "importance": 5, "unesco": "Sì", "desc": "La città vesuviana più estesa e celebre, conservata dall'eruzione del 79 d.C.; strade, domus, terme e pitture raccontano la vita urbana romana.", "source": "UNESCO Site 829 / Parco archeologico di Pompei"}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [14.3482, 40.806]}, "properties": {"name": "Ercolano", "prov": "NA", "period": "Romano", "type": "Città sepolta", "importance": 5, "unesco": "Sì", "desc": "Centro romano eccezionalmente conservato da materiali vulcanici; celebre per case, legni carbonizzati, mosaici e dettagli della vita quotidiana.", "source": "UNESCO Site 829 / Parco archeologico di Ercolano"}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [14.4524, 40.7527]}, "properties": {"name": "Villa di Poppea, Oplontis", "prov": "NA", "period": "Romano", "type": "Villa romana", "importance": 4, "unesco": "Sì", "desc": "Grande villa suburbana di età imperiale, nota per gli affreschi raffinati e gli ambienti residenziali legati all'aristocrazia romana.", "source": "UNESCO Site 829"}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [14.4968, 40.6962]}, "properties": {"name": "Stabiae", "prov": "NA", "period": "Romano", "type": "Ville romane", "importance": 4, "unesco": "No", "desc": "Sistema di ville panoramiche romane a Castellammare di Stabia, con ambienti decorati e vedute sulla piana vesuviana.", "source": "Parco archeologico di Pompei / MiC"}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [15.0052, 40.4192]}, "properties": {"name": "Paestum", "prov": "SA", "period": "Greco-Romano", "type": "Città e templi", "importance": 5, "unesco": "Sì", "desc": "Antica Poseidonia: tre templi dorici monumentali, mura, foro e museo; uno dei paesaggi archeologici più iconici del Mediterraneo.", "source": "UNESCO Site 842 / Parchi archeologici Paestum e Velia"}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [15.1555, 40.1626]}, "properties": {"name": "Velia / Elea", "prov": "SA", "period": "Greco-Romano", "type": "Città antica", "importance": 5, "unesco": "Sì", "desc": "Colonia greca di Elea, patria della scuola filosofica eleatica; conserva Porta Rosa, quartieri urbani e resti monumentali.", "source": "UNESCO Site 842 / Parchi archeologici Paestum e Velia"}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [14.0533, 40.8488]}, "properties": {"name": "Cuma", "prov": "NA", "period": "Greco-Romano", "type": "Acropoli e antro", "importance": 5, "unesco": "No", "desc": "Una delle più antiche colonie greche d'Occidente; l'acropoli, i templi e l'Antro della Sibilla dominano il paesaggio flegreo.", "source": "Parco archeologico dei Campi Flegrei"}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [14.078, 40.8175]}, "properties": {"name": "Baia", "prov": "NA", "period": "Romano", "type": "Terme e residenze", "importance": 4, "unesco": "No", "desc": "Centro termale e residenziale romano nei Campi Flegrei, con grandi complessi voltati e il celebre parco sommerso nelle acque vicine.", "source": "Parco archeologico dei Campi Flegrei"}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [14.1197, 40.8274]}, "properties": {"name": "Rione Terra, Pozzuoli", "prov": "NA", "period": "Greco-Romano", "type": "Quartiere antico", "importance": 4, "unesco": "No", "desc": "Cuore antico di Puteoli, con stratificazioni urbane romane e il Tempio-Duomo che mostra la continuità tra città antica e moderna.", "source": "Parco archeologico dei Campi Flegrei"}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [14.1226, 40.8231]}, "properties": {"name": "Anfiteatro Flavio, Pozzuoli", "prov": "NA", "period": "Romano", "type": "Anfiteatro", "importance": 4, "unesco": "No", "desc": "Uno dei maggiori anfiteatri romani d'Italia, notevole per i sotterranei e il rapporto con la città portuale di Puteoli.", "source": "Parco archeologico dei Campi Flegrei"}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [14.0806, 40.7966]}, "properties": {"name": "Piscina Mirabilis", "prov": "NA", "period": "Romano", "type": "Cisterna", "importance": 4, "unesco": "No", "desc": "Monumentale cisterna romana scavata e voltata, terminale dell'acquedotto augusteo a servizio della flotta di Miseno.", "source": "Parco archeologico dei Campi Flegrei"}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [14.2545, 41.0829]}, "properties": {"name": "Anfiteatro Campano", "prov": "CE", "period": "Romano", "type": "Anfiteatro", "importance": 5, "unesco": "No", "desc": "Grande anfiteatro dell'antica Capua, legato alla tradizione gladiatoria e al vicino Museo dei Gladiatori.", "source": "Ministero della Cultura"}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [14.253, 41.0839]}, "properties": {"name": "Mitreo di Santa Maria Capua Vetere", "prov": "CE", "period": "Romano", "type": "Luogo di culto", "importance": 4, "unesco": "No", "desc": "Ambiente sotterraneo dedicato al culto di Mitra, celebre per la pittura del dio che uccide il toro.", "source": "Direzione regionale Musei Campania / MiC"}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [14.777, 41.129]}, "properties": {"name": "Teatro Romano di Benevento", "prov": "BN", "period": "Romano", "type": "Teatro", "importance": 4, "unesco": "No", "desc": "Teatro di età imperiale ancora utilizzato per eventi, testimonianza della monumentalità della Beneventum romana.", "source": "Ministero della Cultura"}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [14.7813, 41.1315]}, "properties": {"name": "Arco di Traiano, Benevento", "prov": "BN", "period": "Romano", "type": "Monumento", "importance": 4, "unesco": "No", "desc": "Arco trionfale dedicato a Traiano, capolavoro della scultura ufficiale romana e porta simbolica della Via Appia Traiana.", "source": "Comune/MiC"}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [15.0518, 41.0375]}, "properties": {"name": "Aeclanum", "prov": "AV", "period": "Sannita-Romano", "type": "Città antica", "importance": 3, "unesco": "No", "desc": "Area archeologica presso Mirabella Eclano con resti urbani, terme, strade e testimonianze della Campania interna romana.", "source": "Ministero della Cultura"}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [14.7792, 40.9293]}, "properties": {"name": "Abellinum", "prov": "AV", "period": "Romano", "type": "Città antica", "importance": 3, "unesco": "No", "desc": "Nucleo romano dell'odierna area avellinese, con resti urbani e tracce della città antica lungo le vie interne.", "source": "MiC / enti locali"}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [14.0425, 41.0071]}, "properties": {"name": "Liternum", "prov": "NA", "period": "Romano", "type": "Colonia romana", "importance": 3, "unesco": "No", "desc": "Colonia romana legata alla memoria di Scipione l'Africano, con foro, teatro e resti dell'impianto urbano.", "source": "MiC / Comune di Giugliano"}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [14.3725, 40.9441]}, "properties": {"name": "Acerrae", "prov": "NA", "period": "Romano", "type": "Città antica", "importance": 3, "unesco": "No", "desc": "Centro antico della pianura campana, con permanenze archeologiche diffuse e memoria della rete urbana romana.", "source": "MiC / enti locali"}}]};
-const map = L.map('map', { zoomControl:false, attributionControl:true, maxBounds:[[39.15,12.75],[42.05,16.1]], maxBoundsViscosity:.85 }).setView([40.72,14.62],8);
-L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {maxZoom:19, minZoom:7, attribution:'&copy; OpenStreetMap contributors &copy; CARTO | Web Mapper GPT'}).addTo(map);
-const colors = f => f.properties.unesco==='Sì' ? '#42f5ff' : f.properties.importance>=4 ? '#ffd166' : '#ff4fd8';
-function markerIcon(feature){ const c=colors(feature); return L.divIcon({className:'neon-marker', html:`<div style="width:18px;height:18px;border-radius:50%;background:${c};box-shadow:0 0 12px ${c},0 0 24px ${c};border:2px solid #fff"></div>`, iconSize:[22,22], iconAnchor:[11,11]});}
-const group=L.layerGroup().addTo(map); let markers=[];
-function popup(f){ const p=f.properties; return `<div class="popup"><h3>${p.name}</h3><span class="badge">${p.type}</span><span class="badge">${p.period}</span><span class="badge">${p.prov}</span><p>${p.desc}</p><p><b>UNESCO:</b> ${p.unesco}<br><b>Fonte:</b> ${p.source}</p></div>`}
-function fillFilters(){ ['prov','period'].forEach(id=>{const vals=[...new Set(DATA.features.map(f=>f.properties[id==='prov'?'prov':'period']))].sort(); const sel=document.getElementById(id); vals.forEach(v=>sel.insertAdjacentHTML('beforeend',`<option value="${v}">${v}</option>`)); });}
-function render(){ group.clearLayers(); markers=[]; const q=document.getElementById('search').value.toLowerCase(); const prov=document.getElementById('prov').value; const period=document.getElementById('period').value; DATA.features.filter(f=>(prov==='all'||f.properties.prov===prov)&&(period==='all'||f.properties.period===period)&&f.properties.name.toLowerCase().includes(q)).forEach(f=>{const m=L.marker([f.geometry.coordinates[1],f.geometry.coordinates[0]],{icon:markerIcon(f), alt:f.properties.name}).bindPopup(popup(f)); m.addTo(group); markers.push(m);}); document.getElementById('count').textContent=markers.length;}
-fillFilters(); render();
-['search','prov','period'].forEach(id=>document.getElementById(id).addEventListener('input',render));
-document.getElementById('reset').onclick=()=>{document.getElementById('search').value='';document.getElementById('prov').value='all';document.getElementById('period').value='all';render();map.setView([40.72,14.62],8);};
-document.getElementById('sources').onclick=()=>document.getElementById('modal').style.display='flex';
-document.getElementById('close').onclick=()=>document.getElementById('modal').style.display='none';
-document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')e.currentTarget.style.display='none'});
+  <div id="app">
+    <header class="hud topbar">
+      <div>
+        <p class="eyebrow">Web Mapper GPT · Atlante archeologico</p>
+        <h1>Campania Archeologica</h1>
+      </div>
+      <button id="sourcesBtn" class="ghost-btn" aria-label="Apri fonti e crediti">Fonti</button>
+    </header>
+    <main id="map" aria-label="Mappa interattiva dei siti archeologici della Campania"></main>
+    <aside class="panel hud" aria-label="Controlli della mappa">
+      <div class="panel-head">
+        <h2>Filtro siti</h2>
+        <button id="collapsePanel" class="icon-btn" aria-label="Minimizza pannello">−</button>
+      </div>
+      <label for="searchBox">Cerca sito o comune</label>
+      <input id="searchBox" type="search" placeholder="Pompei, Cuma, Paestum..." autocomplete="off"/>
+      <label for="periodFilter">Periodo prevalente</label>
+      <select id="periodFilter"><option value="all">Tutti i periodi</option></select>
+      <label for="provinceFilter">Provincia</label>
+      <select id="provinceFilter"><option value="all">Tutte le province</option></select>
+      <div class="stats">
+        <div><span id="countVisible">0</span><small>visibili</small></div>
+        <div><span id="countTotal">0</span><small>totali</small></div>
+      </div>
+      <button id="resetBtn" class="primary-btn">Reimposta vista</button>
+    </aside>
+    <button id="restorePanel" class="restore hud" aria-label="Richiama legenda e filtri">Filtri</button>
+    <section id="legend" class="legend hud" aria-label="Legenda">
+      <div class="legend-title">Legenda</div>
+      <div class="legend-row"><span class="dot unesco"></span> UNESCO / sistemi UNESCO</div>
+      <div class="legend-row"><span class="dot flegrei"></span> Campi Flegrei</div>
+      <div class="legend-row"><span class="dot vesuviana"></span> Area vesuviana</div>
+      <div class="legend-row"><span class="dot other"></span> Altri siti maggiori</div>
+    </section>
+    <div id="loading" class="loading">Caricamento atlante…</div>
+    <div id="modalBackdrop" class="modal-backdrop" role="presentation">
+      <div class="modal hud" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <button id="closeModal" class="icon-btn close" aria-label="Chiudi">×</button>
+        <h2 id="modalTitle">Fonti, dati e crediti</h2>
+        <p>Dataset compilato per una mappa dimostrativa dei maggiori siti archeologici della Campania. Le coordinate sono indicative per uso cartografico web; per orari, accessi e biglietteria consultare sempre i siti ufficiali.</p>
+        <ul>
+          <li>UNESCO World Heritage Centre: Pompei, Ercolano, Torre Annunziata; Cilento, Paestum, Velia, Padula.</li>
+          <li>Ministero della Cultura / Parco Archeologico dei Campi Flegrei: Cuma, Baia, Pozzuoli, Bacoli e siti collegati.</li>
+          <li>Ministero della Cultura e portali museali istituzionali: siti archeologici regionali.</li>
+          <li>Basemap: CARTO Dark Matter + OpenStreetMap contributors.</li>
+          <li>Made with <a href="https://webmapgpt.com" target="_blank" rel="noopener">Web Mapper GPT</a>.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script>
+window.CAMPANIA_SITES_DATA = {
+  "type": "FeatureCollection",
+  "name": "campania_siti_archeologici_maggiori",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.4869,
+          40.7497
+        ]
+      },
+      "properties": {
+        "id": 1,
+        "name": "Pompei - Parco Archeologico",
+        "comune": "Pompei",
+        "provincia": "NA",
+        "periodo": "Romana",
+        "tipologia": "Città vesuviana",
+        "macro_area": "UNESCO",
+        "descrizione": "Grande città romana sepolta dall'eruzione del Vesuvio del 79 d.C.; straordinaria conservazione di case, strade, botteghe, terme e affreschi.",
+        "fonte": "https://whc.unesco.org/en/list/829/",
+        "rilevanza": "molto alta",
+        "visitabile": "sì / verificare orari ufficiali",
+        "coordinate_note": "coordinate indicative per uso cartografico web"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.3482,
+          40.806
+        ]
+      },
+      "properties": {
+        "id": 2,
+        "name": "Ercolano - Area Archeologica",
+        "comune": "Ercolano",
+        "provincia": "NA",
+        "periodo": "Romana",
+        "tipologia": "Città vesuviana",
+        "macro_area": "UNESCO",
+        "descrizione": "Centro urbano romano conservato da colate piroclastiche; celebre per legni carbonizzati, piani superiori e ambienti domestici eccezionali.",
+        "fonte": "https://whc.unesco.org/en/list/829/",
+        "rilevanza": "molto alta",
+        "visitabile": "sì / verificare orari ufficiali",
+        "coordinate_note": "coordinate indicative per uso cartografico web"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.4515,
+          40.7539
+        ]
+      },
+      "properties": {
+        "id": 3,
+        "name": "Oplontis - Villa di Poppea",
+        "comune": "Torre Annunziata",
+        "provincia": "NA",
+        "periodo": "Romana",
+        "tipologia": "Villa suburbana",
+        "macro_area": "UNESCO",
+        "descrizione": "Imponente villa marittima attribuita a Poppea, con apparati pittorici e architetture residenziali di alto livello.",
+        "fonte": "https://whc.unesco.org/en/list/829/",
+        "rilevanza": "molto alta",
+        "visitabile": "sì / verificare orari ufficiali",
+        "coordinate_note": "coordinate indicative per uso cartografico web"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.4873,
+          40.6961
+        ]
+      },
+      "properties": {
+        "id": 4,
+        "name": "Stabiae - Villa San Marco",
+        "comune": "Castellammare di Stabia",
+        "provincia": "NA",
+        "periodo": "Romana",
+        "tipologia": "Villa d'otium",
+        "macro_area": "Vesuviana",
+        "descrizione": "Grande villa panoramica dell'area stabiana, con terme private, peristili e decorazioni pittoriche.",
+        "fonte": "https://pompeiisites.org/",
+        "rilevanza": "alta",
+        "visitabile": "sì / verificare orari ufficiali",
+        "coordinate_note": "coordinate indicative per uso cartografico web"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.486,
+          40.6969
+        ]
+      },
+      "properties": {
+        "id": 5,
+        "name": "Stabiae - Villa Arianna",
+        "comune": "Castellammare di Stabia",
+        "provincia": "NA",
+        "periodo": "Romana",
+        "tipologia": "Villa d'otium",
+        "macro_area": "Vesuviana",
+        "descrizione": "Villa residenziale su terrazza, nota per il rapporto paesaggistico con il golfo e per le pitture parietali.",
+        "fonte": "https://pompeiisites.org/",
+        "rilevanza": "alta",
+        "visitabile": "sì / verificare orari ufficiali",
+        "coordinate_note": "coordinate indicative per uso cartografico web"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.4745,
+          40.7701
+        ]
+      },
+      "properties": {
+        "id": 6,
+        "name": "Boscoreale - Villa Regina",
+        "comune": "Boscoreale",
+        "provincia": "NA",
+        "periodo": "Romana",
+        "tipologia": "Villa rustica",
+        "macro_area": "Vesuviana",
+        "descrizione": "Villa agricola romana con ambienti produttivi, cella vinaria e testimonianze dell'economia rurale vesuviana.",
+        "fonte": "https://pompeiisites.org/",
+        "rilevanza": "alta",
+        "visitabile": "sì / verificare orari ufficiali",
+        "coordinate_note": "coordinate indicative per uso cartografico web"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.5418,
+          40.803
+        ]
+      },
+      "properties": {
+        "id": 7,
+        "name": "Longola",
+        "comune": "Poggiomarino",
+        "provincia": "NA",
+        "periodo": "Protostorica",
+        "tipologia": "Villaggio perifluviale",
+        "macro_area": "Protostoria",
+        "descrizione": "Insediamento dell'età del Bronzo/Ferro con strutture lignee e canali, importante per la protostoria campana.",
+        "fonte": "https://cultura.gov.it/",
+        "rilevanza": "alta",
+        "visitabile": "sì / verificare orari ufficiali",
+        "coordinate_note": "coordinate indicative per uso cartografico web"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.054,
+          40.8483
+        ]
+      },
+      "properties": {
+        "id": 8,
+        "name": "Cuma - Acropoli e Antro della Sibilla",
+        "comune": "Pozzuoli",
+        "provincia": "NA",
+        "periodo": "Greca/Romana",
+        "tipologia": "Città antica",
+        "macro_area": "Campi Flegrei",
+        "descrizione": "Una delle più antiche colonie greche d'Occidente; include l'acropoli, templi e il celebre Antro della Sibilla.",
+        "fonte": "https://pafleg.cultura.gov.it/it/4388/localit/57/parco-archeologico-di-cuma",
+        "rilevanza": "molto alta",
+        "visitabile": "sì / verificare orari ufficiali",
+        "coordinate_note": "coordinate indicative per uso cartografico web"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.0765,
+          40.8151
+        ]
+      },
+      "properties": {
+        "id": 9,
+        "name": "Baia - Terme e Parco Archeologico",
+        "comune": "Bacoli",
+        "provincia": "NA",
+        "periodo": "Romana",
+        "tipologia": "Complesso termale/residenziale",
+        "macro_area": "Campi Flegrei",
+        "descrizione": "Paesaggio monumentale di terme, ville e architetture imperiali legate all'otium romano nei Campi Flegrei.",
+        "fonte": "https://pafleg.cultura.gov.it/",
+        "rilevanza": "molto alta",
+        "visitabile": "sì / verificare orari ufficiali",
+        "coordinate_note": "coordinate indicative per uso cartografico web"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.0785,
+          40.8195
+        ]
+      },
+      "properties": {
+        "id": 10,
+        "name": "Parco Archeologico Sommerso di Baia",
+        "comune": "Bacoli",
+        "provincia": "NA",
+        "periodo": "Romana",
+        "tipologia": "Sito sommerso",
+        "macro_area": "Campi Flegrei",
+        "descrizione": "Resti sommersi di ville, strade e mosaici romani, oggi visitabili con immersioni e percorsi dedicati.",
+        "fonte": "https://www.parcoarcheologicosommersodibaia.it/",
+        "rilevanza": "molto alta",
+        "visitabile": "sì / verificare orari ufficiali",
+        "coordinate_note": "coordinate indicative per uso cartografico web"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.1227,
+          40.8235
+        ]
+      },
+      "properties": {
+        "id": 11,
+        "name": "Anfiteatro Flavio di Pozzuoli",
+        "comune": "Pozzuoli",
+        "provincia": "NA",
+        "periodo": "Romana",
+        "tipologia": "Anfiteatro",
+        "macro_area": "Campi Flegrei",
+        "descrizione": "Uno dei maggiori anfiteatri romani d'Italia, con sotterranei ben leggibili e infrastrutture sceniche monumentali.",
+        "fonte": "https://pafleg.cultura.gov.it/",
+        "rilevanza": "alta",
+        "visitabile": "sì / verificare orari ufficiali",
+        "coordinate_note": "coordinate indicative per uso cartografico web"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.1191,
+          40.8268
+        ]
+      },
+      "properties": {
+        "id": 12,
+        "name": "Rione Terra",
+        "comune": "Pozzuoli",
+        "provincia": "NA",
+        "periodo": "Greca/Romana",
+        "tipologia": "Quartiere archeologico",
+        "macro_area": "Campi Flegrei",
+        "descrizione": "Stratigrafia urbana continua: colonia greca, città romana e tessuto storico sovrapposti sul promontorio di Pozzuoli.",
+        "fonte": "https://pafleg.cultura.gov.it/",
+        "rilevanza": "alta",
+        "visitabile": "sì / verificare orari ufficiali",
+        "coordinate_note": "coordinate indicative per uso cartografico web"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.0821,
+          40.7978
+        ]
+      },
+      "properties": {
+        "id": 13,
+        "name": "Piscina Mirabilis",
+        "comune": "Bacoli",
+        "provincia": "NA",
+        "periodo": "Romana",
+        "tipologia": "Cisterna",
+        "macro_area": "Campi Flegrei",
+        "descrizione": "Grandiosa cisterna romana scavata nel tufo, terminale dell'acquedotto augusteo al servizio della flotta di Miseno.",
+        "fonte": "https://pafleg.cultura.gov.it/",
+        "rilevanza": "alta",
+        "visitabile": "sì / verificare orari ufficiali",
+        "coordinate_note": "coordinate indicative per uso cartografico web"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.091,
+          40.7998
+        ]
+      },
+      "properties": {
+        "id": 14,
+        "name": "Necropoli di Cappella",
+        "comune": "Bacoli",
+        "provincia": "NA",
+        "periodo": "Romana",
+        "tipologia": "Necropoli",
+        "macro_area": "Campi Flegrei",
+        "descrizione": "Area funeraria romana con monumenti sepolcrali collegati alla viabilità antica e al contesto di Miseno.",
+        "fonte": "https://pafleg.cultura.gov.it/",
+        "rilevanza": "alta",
+        "visitabile": "sì / verificare orari ufficiali",
+        "coordinate_note": "coordinate indicative per uso cartografico web"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.0053,
+          40.4199
+        ]
+      },
+      "properties": {
+        "id": 15,
+        "name": "Paestum - Templi e città antica",
+        "comune": "Capaccio Paestum",
+        "provincia": "SA",
+        "periodo": "Greca/Lucana/Romana",
+        "tipologia": "Città antica",
+        "macro_area": "UNESCO",
+        "descrizione": "Celebre complesso della Magna Grecia con tre templi dorici eccezionalmente conservati e stratificazioni successive.",
+        "fonte": "https://whc.unesco.org/en/list/842/",
+        "rilevanza": "molto alta",
+        "visitabile": "sì / verificare orari ufficiali",
+        "coordinate_note": "coordinate indicative per uso cartografico web"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.1551,
+          40.159
+        ]
+      },
+      "properties": {
+        "id": 16,
+        "name": "Velia - Elea",
+        "comune": "Ascea",
+        "provincia": "SA",
+        "periodo": "Greca/Romana",
+        "tipologia": "Città antica",
+        "macro_area": "UNESCO",
+        "descrizione": "Antica Elea, patria della scuola filosofica eleatica; restano porta, mura, acropoli e quartieri urbani.",
+        "fonte": "https://whc.unesco.org/en/list/842/",
+        "rilevanza": "molto alta",
+        "visitabile": "sì / verificare orari ufficiali",
+        "coordinate_note": "coordinate indicative per uso cartografico web"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.6539,
+          40.3375
+        ]
+      },
+      "properties": {
+        "id": 17,
+        "name": "Certosa di Padula e Museo Archeologico",
+        "comune": "Padula",
+        "provincia": "SA",
+        "periodo": "Medievale/Moderna + Lucana",
+        "tipologia": "Complesso monumentale/museo",
+        "macro_area": "UNESCO",
+        "descrizione": "Grande certosa monumentale che ospita anche il Museo Archeologico Provinciale della Lucania Occidentale.",
+        "fonte": "https://whc.unesco.org/en/list/842/",
+        "rilevanza": "molto alta",
+        "visitabile": "sì / verificare orari ufficiali",
+        "coordinate_note": "coordinate indicative per uso cartografico web"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.783,
+          40.6902
+        ]
+      },
+      "properties": {
+        "id": 18,
+        "name": "Fratte - Area archeologica etrusco-sannitica",
+        "comune": "Salerno",
+        "provincia": "SA",
+        "periodo": "Etrusca/Sannita/Romana",
+        "tipologia": "Insediamento",
+        "macro_area": "Insediamento antico",
+        "descrizione": "Area urbana antica presso Salerno, fondamentale per il contatto tra Etruschi, Sanniti e mondo romano in Campania.",
+        "fonte": "https://cultura.gov.it/",
+        "rilevanza": "alta",
+        "visitabile": "sì / verificare orari ufficiali",
+        "coordinate_note": "coordinate indicative per uso cartografico web"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.8737,
+          40.646
+        ]
+      },
+      "properties": {
+        "id": 19,
+        "name": "Pontecagnano - Museo e necropoli",
+        "comune": "Pontecagnano Faiano",
+        "provincia": "SA",
+        "periodo": "Etrusca/Sannita",
+        "tipologia": "Necropoli/museo",
+        "macro_area": "Etruschi di frontiera",
+        "descrizione": "Importante contesto funerario e museale per la Campania preromana, legato alla città etrusca di Amina.",
+        "fonte": "https://cultura.gov.it/",
+        "rilevanza": "alta",
+        "visitabile": "sì / verificare orari ufficiali",
+        "coordinate_note": "coordinate indicative per uso cartografico web"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.0069,
+          41.0474
+        ]
+      },
+      "properties": {
+        "id": 20,
+        "name": "Aeclanum",
+        "comune": "Mirabella Eclano",
+        "provincia": "AV",
+        "periodo": "Sannita/Romana",
+        "tipologia": "Città antica",
+        "macro_area": "Irpinia romana",
+        "descrizione": "Città lungo la via Appia-Traiana con terme, mercato, domus e strutture urbane di età romana.",
+        "fonte": "https://cultura.gov.it/",
+        "rilevanza": "alta",
+        "visitabile": "sì / verificare orari ufficiali",
+        "coordinate_note": "coordinate indicative per uso cartografico web"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.8253,
+          40.9142
+        ]
+      },
+      "properties": {
+        "id": 21,
+        "name": "Abellinum",
+        "comune": "Atripalda",
+        "provincia": "AV",
+        "periodo": "Sannita/Romana",
+        "tipologia": "Città antica",
+        "macro_area": "Irpinia romana",
+        "descrizione": "Resti dell'antica Abellinum, centro romano dell'Irpinia con domus, terme e mura.",
+        "fonte": "https://cultura.gov.it/",
+        "rilevanza": "alta",
+        "visitabile": "sì / verificare orari ufficiali",
+        "coordinate_note": "coordinate indicative per uso cartografico web"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.335,
+          40.8706
+        ]
+      },
+      "properties": {
+        "id": 22,
+        "name": "Compsa",
+        "comune": "Conza della Campania",
+        "provincia": "AV",
+        "periodo": "Sannita/Romana/Medievale",
+        "tipologia": "Città antica",
+        "macro_area": "Irpinia",
+        "descrizione": "Area archeologica dell'antica Compsa, con testimonianze stratificate dall'età romana al medioevo.",
+        "fonte": "https://cultura.gov.it/",
+        "rilevanza": "alta",
+        "visitabile": "sì / verificare orari ufficiali",
+        "coordinate_note": "coordinate indicative per uso cartografico web"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.7797,
+          41.1296
+        ]
+      },
+      "properties": {
+        "id": 23,
+        "name": "Benevento - Teatro Romano",
+        "comune": "Benevento",
+        "provincia": "BN",
+        "periodo": "Romana",
+        "tipologia": "Teatro",
+        "macro_area": "Benevento romana",
+        "descrizione": "Teatro di età imperiale tra i principali monumenti romani della città, ancora leggibile nella struttura scenica e cavea.",
+        "fonte": "https://cultura.gov.it/",
+        "rilevanza": "alta",
+        "visitabile": "sì / verificare orari ufficiali",
+        "coordinate_note": "coordinate indicative per uso cartografico web"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.781,
+          41.1317
+        ]
+      },
+      "properties": {
+        "id": 24,
+        "name": "Benevento - Arco di Traiano",
+        "comune": "Benevento",
+        "provincia": "BN",
+        "periodo": "Romana",
+        "tipologia": "Arco monumentale",
+        "macro_area": "Benevento romana",
+        "descrizione": "Arco onorario del 114 d.C. legato alla via Traiana, con ricco apparato scultoreo celebrativo.",
+        "fonte": "https://cultura.gov.it/",
+        "rilevanza": "alta",
+        "visitabile": "sì / verificare orari ufficiali",
+        "coordinate_note": "coordinate indicative per uso cartografico web"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.498,
+          41.2353
+        ]
+      },
+      "properties": {
+        "id": 25,
+        "name": "Telesia",
+        "comune": "San Salvatore Telesino",
+        "provincia": "BN",
+        "periodo": "Sannita/Romana",
+        "tipologia": "Città antica",
+        "macro_area": "Sannio",
+        "descrizione": "Resti della città romana di Telesia, con mura, anfiteatro e impianto urbano nel paesaggio del Sannio.",
+        "fonte": "https://cultura.gov.it/",
+        "rilevanza": "alta",
+        "visitabile": "sì / verificare orari ufficiali",
+        "coordinate_note": "coordinate indicative per uso cartografico web"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.3331,
+          41.3267
+        ]
+      },
+      "properties": {
+        "id": 26,
+        "name": "Alife - Allifae",
+        "comune": "Alife",
+        "provincia": "CE",
+        "periodo": "Sannita/Romana",
+        "tipologia": "Città antica",
+        "macro_area": "Sannio/Matese",
+        "descrizione": "Centro romano con cinta muraria e impianto urbano ancora leggibile, importante nel sistema del Sannio campano.",
+        "fonte": "https://cultura.gov.it/",
+        "rilevanza": "alta",
+        "visitabile": "sì / verificare orari ufficiali",
+        "coordinate_note": "coordinate indicative per uso cartografico web"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.2545,
+          41.0823
+        ]
+      },
+      "properties": {
+        "id": 27,
+        "name": "Capua antica - Anfiteatro Campano",
+        "comune": "Santa Maria Capua Vetere",
+        "provincia": "CE",
+        "periodo": "Romana",
+        "tipologia": "Anfiteatro",
+        "macro_area": "Capua antica",
+        "descrizione": "Grande anfiteatro romano di Capua, tra i più importanti d'Italia, con sotterranei e museo dei gladiatori.",
+        "fonte": "https://cultura.gov.it/",
+        "rilevanza": "molto alta",
+        "visitabile": "sì / verificare orari ufficiali",
+        "coordinate_note": "coordinate indicative per uso cartografico web"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.2527,
+          41.079
+        ]
+      },
+      "properties": {
+        "id": 28,
+        "name": "Mitreo di Santa Maria Capua Vetere",
+        "comune": "Santa Maria Capua Vetere",
+        "provincia": "CE",
+        "periodo": "Romana",
+        "tipologia": "Luogo di culto",
+        "macro_area": "Capua antica",
+        "descrizione": "Straordinario mitreo affrescato, testimonianza della diffusione dei culti misterici in Campania romana.",
+        "fonte": "https://cultura.gov.it/",
+        "rilevanza": "alta",
+        "visitabile": "sì / verificare orari ufficiali",
+        "coordinate_note": "coordinate indicative per uso cartografico web"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.132,
+          41.229
+        ]
+      },
+      "properties": {
+        "id": 29,
+        "name": "Cales",
+        "comune": "Calvi Risorta",
+        "provincia": "CE",
+        "periodo": "Aurunca/Romana",
+        "tipologia": "Città antica",
+        "macro_area": "Campania settentrionale",
+        "descrizione": "Antica città aurunca e poi romana, con teatro, terme e resti urbani lungo assi viari importanti.",
+        "fonte": "https://cultura.gov.it/",
+        "rilevanza": "alta",
+        "visitabile": "sì / verificare orari ufficiali",
+        "coordinate_note": "coordinate indicative per uso cartografico web"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.3835,
+          40.9614
+        ]
+      },
+      "properties": {
+        "id": 30,
+        "name": "Suessula",
+        "comune": "Acerra",
+        "provincia": "NA",
+        "periodo": "Osco/Sannita/Romana",
+        "tipologia": "Città antica",
+        "macro_area": "Pianura campana",
+        "descrizione": "Area dell'antica Suessula, nodo archeologico della pianura campana con lunga frequentazione preromana e romana.",
+        "fonte": "https://cultura.gov.it/",
+        "rilevanza": "alta",
+        "visitabile": "sì / verificare orari ufficiali",
+        "coordinate_note": "coordinate indicative per uso cartografico web"
+      }
+    }
+  ]
+};
 </script>
-</body></html>
+<script>
+
+/*
+Campania Archeologica · Neon Atlas
+Design notes:
+- Dense point set uses luminous qualitative symbols, not choropleth, because each site is a discrete destination.
+- Popups carry narrative detail; filters manage cognitive load.
+- Map controls are intentionally minimal for a museum-kiosk feeling.
+*/
+const DATA_URL = null;
+const initialView = { center: [40.72, 14.75], zoom: 8 };
+let allFeatures = [];
+let markerLayer = L.layerGroup();
+let markerRefs = [];
+
+const map = L.map('map', {
+  zoomControl: false,
+  attributionControl: true,
+  maxBounds: [[38.9, 12.0],[42.4, 16.9]],
+  maxBoundsViscosity: 0.82,
+  minZoom: 7,
+  maxZoom: 16
+}).setView(initialView.center, initialView.zoom);
+
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+  attribution: '&copy; OpenStreetMap contributors &copy; CARTO | Web Mapper GPT',
+  subdomains: 'abcd',
+  maxZoom: 20
+}).addTo(map);
+
+markerLayer.addTo(map);
+
+const els = {
+  loading: document.getElementById('loading'),
+  search: document.getElementById('searchBox'),
+  period: document.getElementById('periodFilter'),
+  province: document.getElementById('provinceFilter'),
+  reset: document.getElementById('resetBtn'),
+  visible: document.getElementById('countVisible'),
+  total: document.getElementById('countTotal'),
+  panel: document.querySelector('.panel'),
+  collapse: document.getElementById('collapsePanel'),
+  restore: document.getElementById('restorePanel'),
+  sources: document.getElementById('sourcesBtn'),
+  modal: document.getElementById('modalBackdrop'),
+  closeModal: document.getElementById('closeModal')
+};
+
+function categoryColor(props){
+  const area = (props.macro_area || '').toLowerCase();
+  const rilevanza = (props.rilevanza || '').toLowerCase();
+  if(area.includes('unesco') || props.macro_area === 'UNESCO') return '#f7d66b';
+  if(area.includes('campi flegrei')) return '#ff4fd8';
+  if(area.includes('vesuviana')) return '#49f6ff';
+  return '#42ff9e';
+}
+
+function markerIcon(props){
+  const color = categoryColor(props);
+  return L.divIcon({
+    className: 'neon-div-icon',
+    html: `<span class="pulse-marker" style="color:${color}" aria-hidden="true"></span>`,
+    iconSize: [28,28],
+    iconAnchor: [14,14],
+    popupAnchor: [0,-14]
+  });
+}
+
+function popupHTML(p){
+  return `<article class="popup-card">
+    <div class="popup-kicker">${p.comune} · ${p.provincia}</div>
+    <h3 class="popup-title">${p.name}</h3>
+    <div class="popup-meta">
+      <span class="badge">${p.periodo}</span>
+      <span class="badge">${p.tipologia}</span>
+      <span class="badge">${p.macro_area}</span>
+    </div>
+    <p>${p.descrizione}</p>
+    <p><strong>Visitabilità:</strong> ${p.visitabile}</p>
+    <a href="${p.fonte}" target="_blank" rel="noopener">Fonte / verifica ufficiale ↗</a>
+  </article>`;
+}
+
+function populateFilters(features){
+  const periods = [...new Set(features.map(f => f.properties.periodo))].sort();
+  const provinces = [...new Set(features.map(f => f.properties.provincia))].sort();
+  periods.forEach(v => els.period.insertAdjacentHTML('beforeend', `<option value="${v}">${v}</option>`));
+  provinces.forEach(v => els.province.insertAdjacentHTML('beforeend', `<option value="${v}">${v}</option>`));
+}
+
+function applyFilters(){
+  const q = els.search.value.trim().toLowerCase();
+  const period = els.period.value;
+  const province = els.province.value;
+  markerLayer.clearLayers();
+  markerRefs = [];
+  const visible = allFeatures.filter(f => {
+    const p = f.properties;
+    const hay = `${p.name} ${p.comune} ${p.periodo} ${p.tipologia} ${p.macro_area}`.toLowerCase();
+    return (!q || hay.includes(q)) &&
+           (period === 'all' || p.periodo === period) &&
+           (province === 'all' || p.provincia === province);
+  });
+  visible.forEach(f => {
+    const p = f.properties;
+    const [lon, lat] = f.geometry.coordinates;
+    const m = L.marker([lat, lon], {icon: markerIcon(p), title: p.name});
+    m.bindPopup(popupHTML(p), {maxWidth: 360, closeButton: true});
+    m.addTo(markerLayer);
+    markerRefs.push({marker:m, feature:f});
+  });
+  els.visible.textContent = visible.length;
+  els.total.textContent = allFeatures.length;
+  if(visible.length && (q || period !== 'all' || province !== 'all')){
+    const group = L.featureGroup(markerRefs.map(x => x.marker));
+    map.fitBounds(group.getBounds().pad(0.2), {animate:true, maxZoom:11});
+  }
+}
+
+function resetMap(){
+  els.search.value = '';
+  els.period.value = 'all';
+  els.province.value = 'all';
+  applyFilters();
+  map.setView(initialView.center, initialView.zoom, {animate:true});
+}
+
+async function init(){
+  try{
+    const data = window.CAMPANIA_SITES_DATA;
+    allFeatures = data.features || [];
+    populateFilters(allFeatures);
+    applyFilters();
+    els.loading.classList.add('hidden');
+  }catch(err){
+    console.error(err);
+    els.loading.textContent = 'Errore nel caricamento dei dati incorporati.';
+  }
+}
+
+['input'].forEach(ev => els.search.addEventListener(ev, applyFilters));
+els.period.addEventListener('change', applyFilters);
+els.province.addEventListener('change', applyFilters);
+els.reset.addEventListener('click', resetMap);
+els.collapse.addEventListener('click', () => { els.panel.classList.add('collapsed'); els.restore.classList.add('visible'); });
+els.restore.addEventListener('click', () => { els.panel.classList.remove('collapsed'); els.restore.classList.remove('visible'); });
+els.sources.addEventListener('click', () => els.modal.classList.add('open'));
+els.closeModal.addEventListener('click', () => els.modal.classList.remove('open'));
+els.modal.addEventListener('click', e => { if(e.target === els.modal) els.modal.classList.remove('open'); });
+document.addEventListener('keydown', e => { if(e.key === 'Escape') els.modal.classList.remove('open'); });
+
+init();
+
+</script>
+</body>
+</html>
